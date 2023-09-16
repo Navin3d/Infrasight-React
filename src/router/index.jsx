@@ -2,17 +2,22 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import HomePage from "../pages/home-page";
 import LoginPage from "../pages/login-page";
+import TaskManager from "../pages/charts-page";
 
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <HomePage/>
+        element: <HomePage />
     },
     {
         path: "/login",
-        element: <LoginPage/>
-    }
+        element: <LoginPage />
+    },
+    {
+        path: "/chart",
+        element: <TaskManager />
+    },
 ]);
 
 const Router = () => (
