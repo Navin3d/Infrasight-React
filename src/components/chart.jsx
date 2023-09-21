@@ -28,7 +28,7 @@ const Chart = (props) => {
 
     return (
 
-
+        <div className='chart-back'>
         <Box boxShadow={2} marginTop={3} borderRadius={3} padding={1} width="95%">
             <ResponsiveContainer width="100%" height={400}>
                 <AreaChart
@@ -53,6 +53,7 @@ const Chart = (props) => {
                     <Area type="monotone" dataKey={props.name} stroke={props.color} fill={props.color} />
                 </AreaChart>
             </ResponsiveContainer></Box>
+        </div>
 
     )
 }

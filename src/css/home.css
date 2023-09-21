@@ -1,0 +1,85 @@
+
+.home-container {
+    background-color: black;
+    color: white;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    animation: fadeIn 2s ease-in-out;
+    padding: 100px ,0px;
+  }
+  .services-container{
+    padding-top: 200px;
+    background-color: black;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    animation: fadeIn 2s ease-in-out;
+  }
+
+.service-subtitle{
+  font-size: 1.5rem;
+  font-family: 'Pacifico', cursive;
+  text-decoration: none;
+  color: white;
+}
+
+/* The rest of your CSS styles remain the same */
+
+  #total-box{
+    padding-top: 100px;
+    padding-bottom: 300px;
+  }
+  .home-title {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-family: 'Tilt Prism', cursive;
+  }
+  
+  .home-description {
+    font-size: 1.5rem;
+    font-family: 'Pacifico', cursive;
+  }
+
+  .box-service{
+    border: 1px solid white;
+    height: 80px;
+    width: 250px;
+    align-items: center;
+    position: relative;
+    padding-top: 15px;
+    border-radius: 10px;
+    text-decoration: none;
+  }
+
+  .service-title{
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-family: 'Tilt Prism', cursive;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  
+
+
+
+  
+  
+
+  
+ 
+  

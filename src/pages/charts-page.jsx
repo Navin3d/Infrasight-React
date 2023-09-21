@@ -19,7 +19,7 @@ const Charts = () => {
         setCpu(true);
     }, [])
     return (
-        <>
+        <div className ="chart-back">
             <Grid
                 container
                 direction="row"
@@ -35,7 +35,7 @@ const Charts = () => {
                         alignItems="center"
                         spacing={2}
                     >
-                        <Grid item ><Paper sx={{ maxWidth: "500px", width: 250, padding: 2, borderRadius: 3 }} elevation={1}>
+                        <Grid item ><Paper sx={{ maxWidth: "500px", width: 250, padding: 2, borderRadius: 3, backgroundColor: "black" ,border : "1px solid white" }} elevation={1}>
                             <Grid
                                 container
                                 direction="column"
@@ -46,12 +46,12 @@ const Charts = () => {
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
                                     60
                                 </Typography></Grid>
-                                <Grid item><Typography variant="subtitle2" color="grey" gutterBottom>
+                                <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
                                     Utilization %
                                 </Typography></Grid>
                             </Grid>
                         </Paper></Grid>
-                        <Grid item><Paper sx={{ maxWidth: "500px", width: 250, padding: 2, borderRadius: 3 }} elevation={1}>
+                        <Grid item><Paper sx={{maxWidth: "500px", width: 250, padding: 2, borderRadius: 3, backgroundColor: "black" ,border : "1px solid white" }} elevation={1}>
                             <Grid
                                 container
                                 direction="column"
@@ -61,12 +61,12 @@ const Charts = () => {
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
                                     60
                                 </Typography></Grid>
-                                <Grid item><Typography variant="subtitle2" color="grey" gutterBottom>
+                                <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
                                     Utilization %
                                 </Typography></Grid>
                             </Grid>
                         </Paper></Grid>
-                        <Grid item><Paper sx={{ maxWidth: "500px", width: 250, padding: 2, borderRadius: 3 }} elevation={1}>
+                        <Grid item><Paper sx={{ maxWidth: "500px", width: 250, padding: 2, borderRadius: 3, backgroundColor: "black" ,border : "1px solid white" }} elevation={1}>
                             <Grid
                                 container
                                 direction="column"
@@ -76,12 +76,12 @@ const Charts = () => {
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
                                     60
                                 </Typography></Grid>
-                                <Grid item><Typography variant="subtitle2" color="grey" gutterBottom>
+                                <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
                                     Utilization %
                                 </Typography></Grid>
                             </Grid>
                         </Paper></Grid>
-                        <Grid item><Paper sx={{ maxWidth: "500px", width: 250, padding: 2, borderRadius: 3 }} elevation={1}>
+                        <Grid item><Paper sx={{ maxWidth: "500px", width: 250, padding: 2, borderRadius: 3, backgroundColor: "black" ,border : "1px solid white" }} elevation={1}>
                             <Grid
                                 container
                                 direction="column"
@@ -91,7 +91,7 @@ const Charts = () => {
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
                                     60
                                 </Typography></Grid>
-                                <Grid item><Typography variant="subtitle2" color="grey" gutterBottom>
+                                <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
                                     Utilization %
                                 </Typography></Grid>
                             </Grid>
@@ -175,10 +175,7 @@ const Charts = () => {
                 <Grid item><button className="nav-btn">Back</button></Grid>
                 <Grid item><button className="nav-btn">Next</button></Grid>
             </Grid>
-
-        </>
-
-
+            </div>
 
     )
 }
