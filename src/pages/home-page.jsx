@@ -5,10 +5,10 @@ const HomePage = () => {
     return (
         <div>
             <div className="home-container">
-                <div className="box">
+                <div className="box"></div>
                     <h1 className="home-title">Infrasight Monitoring</h1>
                     <p className="home-description">Keep an eye on your servers in real-time</p>
-                </div>
+                
             </div>
             
             {/* Add a spacer or some content to create space */}
