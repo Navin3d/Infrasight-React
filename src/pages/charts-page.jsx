@@ -1,32 +1,288 @@
-import { Box, Grid, Paper, Typography } from '@mui/material'
-
-import React, { useEffect, useState } from 'react'
-import Chart from '../components/chart'
-// import MemoryIcon from '@mui/icons-material/Memory';
-// import StorageIcon from '@mui/icons-material/Storage';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
+import { Box, Grid, Paper, Typography } from '@mui/material'
+import Chart from '../components/chart';
 import { CPU_data, Disk_columns, Disk_rows, RAM_data } from '../components/data/graphData';
 import '../styles/index.css'
+import { getServer } from '../services/api.service';
+
+
+const SERVER_DATA = {
+    "name": "Ubuntu-Serve",
+    "description": "This is an ubuntu containmer running in Docker.",
+    "host": "localhost",
+    "isActive": true,
+    "ramCPU": [
+        {
+            "availableRam": 7170508,
+            "totalRam": 8039920,
+            "cpuPerformance": 0.25,
+            "capturedAt": "2023-09-15T11:06:50.101"
+        },
+        {
+            "availableRam": 7170028,
+            "totalRam": 8039920,
+            "cpuPerformance": 0.5,
+            "capturedAt": "2023-09-15T11:12:25.843"
+        },
+        {
+            "availableRam": 7166976,
+            "totalRam": 8039920,
+            "cpuPerformance": 0.74,
+            "capturedAt": "2023-09-15T11:17:24.153"
+        },
+        {
+            "availableRam": 7176856,
+            "totalRam": 8039920,
+            "cpuPerformance": 1.75,
+            "capturedAt": "2023-09-16T18:56:25.520"
+        },
+        {
+            "availableRam": 7172852,
+            "totalRam": 8039920,
+            "cpuPerformance": 0.0,
+            "capturedAt": "2023-09-16T19:01:21.596"
+        },
+        {
+            "availableRam": 7168600,
+            "totalRam": 8039920,
+            "cpuPerformance": 1.0,
+            "capturedAt": "2023-09-16T19:06:29.120"
+        },
+        {
+            "availableRam": 7177040,
+            "totalRam": 8039920,
+            "cpuPerformance": 1.0,
+            "capturedAt": "2023-09-22T13:29:23.821"
+        },
+        {
+            "availableRam": 7173072,
+            "totalRam": 8039920,
+            "cpuPerformance": 0.75,
+            "capturedAt": "2023-09-22T13:34:19.202"
+        },
+        {
+            "availableRam": 7167568,
+            "totalRam": 8039920,
+            "cpuPerformance": 1.25,
+            "capturedAt": "2023-09-22T13:39:27.527"
+        },
+        {
+            "availableRam": 7164308,
+            "totalRam": 8039920,
+            "cpuPerformance": 0.5,
+            "capturedAt": "2023-09-22T13:44:35.973"
+        },
+        {
+            "availableRam": 7161392,
+            "totalRam": 8039920,
+            "cpuPerformance": 1.02,
+            "capturedAt": "2023-09-22T13:49:44.540"
+        },
+        {
+            "availableRam": 7158044,
+            "totalRam": 8039920,
+            "cpuPerformance": 0.75,
+            "capturedAt": "2023-09-22T13:54:52.886"
+        },
+        {
+            "availableRam": 7154060,
+            "totalRam": 8039920,
+            "cpuPerformance": 0.25,
+            "capturedAt": "2023-09-22T14:00:01.316"
+        },
+        {
+            "availableRam": 7150628,
+            "totalRam": 8039920,
+            "cpuPerformance": 0.25,
+            "capturedAt": "2023-09-22T14:05:33.354"
+        },
+        {
+            "availableRam": 7149304,
+            "totalRam": 8039920,
+            "cpuPerformance": 0.75,
+            "capturedAt": "2023-09-22T14:10:41.441"
+        },
+        {
+            "availableRam": 7145940,
+            "totalRam": 8039920,
+            "cpuPerformance": 0.25,
+            "capturedAt": "2023-09-22T14:15:49.496"
+        },
+        {
+            "availableRam": 7141932,
+            "totalRam": 8039920,
+            "cpuPerformance": 0.76,
+            "capturedAt": "2023-09-22T14:20:57.633"
+        },
+        {
+            "availableRam": 7138296,
+            "totalRam": 8039920,
+            "cpuPerformance": 0.0,
+            "capturedAt": "2023-09-22T14:26:05.706"
+        }
+    ],
+    "discStats": [
+        {
+            "discMounts": [
+                {
+                    "fileSystem": "tmpfs",
+                    "used": "0",
+                    "use": "0%",
+                    "available": "68M",
+                    "size": "68M"
+                },
+                {
+                    "fileSystem": "tmpfs",
+                    "used": "0",
+                    "use": "0%",
+                    "available": "4.2G",
+                    "size": "4.2G"
+                },
+                {
+                    "fileSystem": "shm",
+                    "used": "0",
+                    "use": "0%",
+                    "available": "68M",
+                    "size": "68M"
+                },
+                {
+                    "fileSystem": "/dev/vda1",
+                    "used": "51G",
+                    "use": "86%",
+                    "available": "8.9G",
+                    "size": "63G"
+                },
+                {
+                    "fileSystem": "overlay",
+                    "used": "51G",
+                    "use": "86%",
+                    "available": "8.9G",
+                    "size": "63G"
+                }
+            ],
+            "capturedAt": "2023-09-15"
+        },
+        {
+            "discMounts": [
+                {
+                    "fileSystem": "tmpfs",
+                    "used": "0",
+                    "use": "0%",
+                    "available": "68M",
+                    "size": "68M"
+                },
+                {
+                    "fileSystem": "tmpfs",
+                    "used": "0",
+                    "use": "0%",
+                    "available": "4.2G",
+                    "size": "4.2G"
+                },
+                {
+                    "fileSystem": "shm",
+                    "used": "0",
+                    "use": "0%",
+                    "available": "68M",
+                    "size": "68M"
+                },
+                {
+                    "fileSystem": "/dev/vda1",
+                    "used": "51G",
+                    "use": "86%",
+                    "available": "8.9G",
+                    "size": "63G"
+                },
+                {
+                    "fileSystem": "overlay",
+                    "used": "51G",
+                    "use": "86%",
+                    "available": "8.9G",
+                    "size": "63G"
+                }
+            ],
+            "capturedAt": "2023-09-16"
+        },
+        {
+            "discMounts": [
+                {
+                    "fileSystem": "tmpfs",
+                    "used": "0",
+                    "use": "0%",
+                    "available": "68M",
+                    "size": "68M"
+                },
+                {
+                    "fileSystem": "tmpfs",
+                    "used": "0",
+                    "use": "0%",
+                    "available": "4.2G",
+                    "size": "4.2G"
+                },
+                {
+                    "fileSystem": "shm",
+                    "used": "0",
+                    "use": "0%",
+                    "available": "68M",
+                    "size": "68M"
+                },
+                {
+                    "fileSystem": "/dev/vda1",
+                    "used": "51G",
+                    "use": "86%",
+                    "available": "8.9G",
+                    "size": "63G"
+                },
+                {
+                    "fileSystem": "overlay",
+                    "used": "51G",
+                    "use": "86%",
+                    "available": "8.9G",
+                    "size": "63G"
+                }
+            ],
+            "capturedAt": "2023-09-22"
+        }
+    ]
+};
 
 const Charts = () => {
-
+    const { id } = useParams();
     const [isCpu, setCpu] = useState(true);
     const [isRam, setRam] = useState(false);
     const [isDisk, setDisk] = useState(false);
+
+    const [isLoading, setLoading] = useState(false);
+    const [server, setServer] = useState(SERVER_DATA);
+
+    const onInit = async () => {
+        try {
+            setLoading(() => true);
+            const serverData = await getServer(id);
+            setServer((prev) => ({ serverData }));
+            console.log("serverData ", serverData);
+        } catch (e) {
+            console.log("error: ", e);
+        } finally {
+            setLoading(() => false);
+        }
+    }
+
     useEffect(() => {
+        onInit();
         setDisk(false);
         setRam(false);
         setCpu(true);
     }, [])
+
     return (
-        <div className ="chart-back">
+        <div className="chart-back">
             <Grid
                 container
                 direction="row"
                 justifyContent="center"
-            // alignItems="center"
             >
-
                 <Grid item xs={12} sm={12} md={12} lg={12} sx={{ marginTop: "3rem" }}>
                     <Grid
                         container
@@ -35,7 +291,7 @@ const Charts = () => {
                         alignItems="center"
                         spacing={2}
                     >
-                        <Grid item ><Paper sx={{ maxWidth: "500px", width: 250, padding: 2, borderRadius: 3, backgroundColor: "black" ,border : "1px solid white" }} elevation={1}>
+                        <Grid item ><Paper sx={{ maxWidth: "500px", width: 250, padding: 2, borderRadius: 3, backgroundColor: "black", border: "1px solid white" }} elevation={1}>
                             <Grid
                                 container
                                 direction="column"
@@ -51,7 +307,7 @@ const Charts = () => {
                                 </Typography></Grid>
                             </Grid>
                         </Paper></Grid>
-                        <Grid item><Paper sx={{maxWidth: "500px", width: 250, padding: 2, borderRadius: 3, backgroundColor: "black" ,border : "1px solid white" }} elevation={1}>
+                        <Grid item><Paper sx={{ maxWidth: "500px", width: 250, padding: 2, borderRadius: 3, backgroundColor: "black", border: "1px solid white" }} elevation={1}>
                             <Grid
                                 container
                                 direction="column"
@@ -66,7 +322,7 @@ const Charts = () => {
                                 </Typography></Grid>
                             </Grid>
                         </Paper></Grid>
-                        <Grid item><Paper sx={{ maxWidth: "500px", width: 250, padding: 2, borderRadius: 3, backgroundColor: "black" ,border : "1px solid white" }} elevation={1}>
+                        <Grid item><Paper sx={{ maxWidth: "500px", width: 250, padding: 2, borderRadius: 3, backgroundColor: "black", border: "1px solid white" }} elevation={1}>
                             <Grid
                                 container
                                 direction="column"
@@ -81,7 +337,7 @@ const Charts = () => {
                                 </Typography></Grid>
                             </Grid>
                         </Paper></Grid>
-                        <Grid item><Paper sx={{ maxWidth: "500px", width: 250, padding: 2, borderRadius: 3, backgroundColor: "black" ,border : "1px solid white" }} elevation={1}>
+                        <Grid item><Paper sx={{ maxWidth: "500px", width: 250, padding: 2, borderRadius: 3, backgroundColor: "black", border: "1px solid white" }} elevation={1}>
                             <Grid
                                 container
                                 direction="column"
@@ -175,7 +431,7 @@ const Charts = () => {
                 <Grid item><button className="nav-btn">Back</button></Grid>
                 <Grid item><button className="nav-btn">Next</button></Grid>
             </Grid>
-            </div>
+        </div>
 
     )
 }

@@ -2,6 +2,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import HomePage from "../pages/home-page";
 import LoginPage from "../pages/login-page";
+import ListPage from "../pages/list-page";
 import TaskManager from "../pages/charts-page";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -16,7 +17,11 @@ const router = createBrowserRouter([
         element: <LoginPage />
     },
     {
-        path: "/chart",
+        path: "/list",
+        element: <ListPage />    
+    },
+    {
+        path: "/chart/:id",
         element: <TaskManager />    
     },
 ]);
