@@ -1,125 +1,113 @@
-import React, { useState, useEffect } from "react";
-import { getServersList } from "../services/api.service";
+import React, { useEffect, useState } from 'react'
+import Box from '../components/box'
+import Loading from '../components/loading'
+import { useNavigate } from 'react-router-dom';
+import { getServersList } from '../services/api.service';
 
 const INITIAL_SERVERS = [
     {
-        "id": "165",
-        "name": "Ubuntu-Server-1",
+        "name": "Ubuntu-Server",
         "description": "This is an ubuntu containmer running in Docker.",
         "ramCPU": [
             {
-                "availableRam": 7170508,
-                "cpuPerformance": 0.25
+                "availableRam": null,
+                "cpuPerformance": null
             },
             {
-                "availableRam": 7170028,
-                "cpuPerformance": 0.5
+                "availableRam": null,
+                "cpuPerformance": null
             },
             {
-                "availableRam": 7166976,
-                "cpuPerformance": 0.74
+                "availableRam": null,
+                "cpuPerformance": null
             },
             {
-                "availableRam": 7176856,
-                "cpuPerformance": 1.75
+                "availableRam": null,
+                "cpuPerformance": null
             },
             {
-                "availableRam": 7172852,
-                "cpuPerformance": 0.0
+                "availableRam": null,
+                "cpuPerformance": null
             },
             {
-                "availableRam": 7168600,
-                "cpuPerformance": 1.0
+                "availableRam": null,
+                "cpuPerformance": null
             },
             {
-                "availableRam": 7177040,
-                "cpuPerformance": 1.0
+                "availableRam": null,
+                "cpuPerformance": null
             },
             {
-                "availableRam": 7173072,
-                "cpuPerformance": 0.75
+                "availableRam": null,
+                "cpuPerformance": null
             },
             {
-                "availableRam": 7167568,
-                "cpuPerformance": 1.25
+                "availableRam": null,
+                "cpuPerformance": null
             },
             {
-                "availableRam": 7164308,
-                "cpuPerformance": 0.5
+                "availableRam": null,
+                "cpuPerformance": null
             },
             {
-                "availableRam": 7161392,
-                "cpuPerformance": 1.02
+                "availableRam": null,
+                "cpuPerformance": null
             },
             {
-                "availableRam": 7158044,
-                "cpuPerformance": 0.75
+                "availableRam": null,
+                "cpuPerformance": null
+            },
+            {
+                "availableRam": null,
+                "cpuPerformance": null
+            },
+            {
+                "availableRam": null,
+                "cpuPerformance": null
+            },
+            {
+                "availableRam": null,
+                "cpuPerformance": null
+            },
+            {
+                "availableRam": null,
+                "cpuPerformance": null
+            },
+            {
+                "availableRam": null,
+                "cpuPerformance": null
+            },
+            {
+                "availableRam": null,
+                "cpuPerformance": null
+            },
+            {
+                "availableRam": null,
+                "cpuPerformance": null
+            },
+            {
+                "availableRam": null,
+                "cpuPerformance": null
+            },
+            {
+                "availableRam": null,
+                "cpuPerformance": null
+            },
+            {
+                "availableRam": null,
+                "cpuPerformance": null
             }
         ],
-        "discStats": [
-            {
-                "discMounts": [
-                    {
-                        "available": "68M"
-                    },
-                    {
-                        "available": "4.2G"
-                    },
-                    {
-                        "available": "68M"
-                    },
-                    {
-                        "available": "8.9G"
-                    },
-                    {
-                        "available": "8.9G"
-                    }
-                ]
-            },
-            {
-                "discMounts": [
-                    {
-                        "available": "68M"
-                    },
-                    {
-                        "available": "4.2G"
-                    },
-                    {
-                        "available": "68M"
-                    },
-                    {
-                        "available": "8.9G"
-                    },
-                    {
-                        "available": "8.9G"
-                    }
-                ]
-            },
-            {
-                "discMounts": [
-                    {
-                        "available": "68M"
-                    },
-                    {
-                        "available": "4.2G"
-                    },
-                    {
-                        "available": "68M"
-                    },
-                    {
-                        "available": "8.9G"
-                    },
-                    {
-                        "available": "8.9G"
-                    }
-                ]
-            }
-        ]
+        "discStats": []
     },
 ];
+
 const ListPage = () => {
+    const navigate = useNavigate();
+
     const [isLoading, setLoading] = useState(false);
     const [servers, setServers] = useState(INITIAL_SERVERS);
+
     const onInit = async () => {
         try {
             setLoading(() => true);
@@ -131,21 +119,25 @@ const ListPage = () => {
             setLoading(() => false);
         }
     }
+
     useEffect(() => {
         onInit();
     }, []);
+
     return (
-        <div>
+        <>
             {
-                (!isLoading) &&
-                servers.map(server => (
-                    <div key={server.id}>
-                        <a href={`/chart/${server.id}`}>{server.name}</a>
+                isLoading ? <Loading />
+                    :
+                    <div className='listpage'>
+                        <Box id="1234" name="Voldemart" cpu="89" ram="60" disk="37" />
+                        <Box id="1234" name="ConnectVerse" cpu="15" ram="20" disk="35" />
+                        <Box id="1234" name="LegalChain" cpu="52" ram="77" disk="12" />
+                        <Box id="1234" name="Innovatree" cpu="77" ram="80" disk="50" />
                     </div>
-                ))
             }
-        </div>
-    );
+        </>
+    )
 }
 
-export default ListPage;
+export default ListPage

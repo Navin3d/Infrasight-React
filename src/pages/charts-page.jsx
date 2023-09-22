@@ -6,6 +6,7 @@ import Chart from '../components/chart';
 import { CPU_data, Disk_columns, Disk_rows, RAM_data } from '../components/data/graphData';
 import '../styles/index.css'
 import { getServer } from '../services/api.service';
+import Loading from '../components/loading';
 
 
 const SERVER_DATA = {
@@ -248,7 +249,12 @@ const SERVER_DATA = {
 };
 
 const Charts = () => {
+    
     const { id } = useParams();
+
+    const [columnVisibilityModel, setColumnVisibilityModel] = useState({
+        id: false,
+    });
     const [isCpu, setCpu] = useState(true);
     const [isRam, setRam] = useState(false);
     const [isDisk, setDisk] = useState(false);
@@ -277,7 +283,7 @@ const Charts = () => {
     }, [])
 
     return (
-        <div className="chart-back">
+        <>{isLoading ? <Loading /> : <div className="chart-back">
             <Grid
                 container
                 direction="row"
@@ -300,10 +306,10 @@ const Charts = () => {
 
                             >
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
-                                    60
+                                    76
                                 </Typography></Grid>
                                 <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
-                                    Utilization %
+                                    CPU Utilization %
                                 </Typography></Grid>
                             </Grid>
                         </Paper></Grid>
@@ -315,10 +321,10 @@ const Charts = () => {
                                 alignItems="center"
                             >
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
-                                    60
+                                    86
                                 </Typography></Grid>
                                 <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
-                                    Utilization %
+                                    RAM Utilization %
                                 </Typography></Grid>
                             </Grid>
                         </Paper></Grid>
@@ -330,10 +336,10 @@ const Charts = () => {
                                 alignItems="center"
                             >
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
-                                    60
+                                    34
                                 </Typography></Grid>
                                 <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
-                                    Utilization %
+                                    DISK Utilization %
                                 </Typography></Grid>
                             </Grid>
                         </Paper></Grid>
@@ -345,10 +351,10 @@ const Charts = () => {
                                 alignItems="center"
                             >
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
-                                    60
+                                    40
                                 </Typography></Grid>
                                 <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
-                                    Utilization %
+                                    Overall Utilization %
                                 </Typography></Grid>
                             </Grid>
                         </Paper></Grid>
@@ -399,8 +405,10 @@ const Charts = () => {
                                     {isCpu ? <Chart data={CPU_data} name="cpu" color="#3185FC" /> : <></>}
                                     {isDisk ? <Box sx={{ height: 400, width: '100%', boxShadow: 1, marginTop: 3 }}>
                                         <DataGrid
+                                            sx={{ color: "#fff" }}
                                             rows={Disk_rows}
                                             columns={Disk_columns}
+                                            columnVisibilityModel={columnVisibilityModel}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: {
@@ -431,7 +439,8 @@ const Charts = () => {
                 <Grid item><button className="nav-btn">Back</button></Grid>
                 <Grid item><button className="nav-btn">Next</button></Grid>
             </Grid>
-        </div>
+        </div>}
+        </>
 
     )
 }
