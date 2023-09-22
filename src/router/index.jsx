@@ -5,6 +5,8 @@ import LoginPage from "../pages/login-page";
 import TaskManager from "../pages/charts-page";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import ListPage from "../pages/list-page";
+import Loading from "../components/loading";
 
 const router = createBrowserRouter([
     {
@@ -17,7 +19,15 @@ const router = createBrowserRouter([
     },
     {
         path: "/chart",
-        element: <TaskManager />    
+        element: <TaskManager />
+    },
+    {
+        path: "/list",
+        element: <ListPage />
+    },
+    {
+        path: "/loading",
+        element: <Loading />
     },
 ]);
 
