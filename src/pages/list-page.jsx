@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Box from '../components/box'
 import Loading from '../components/loading'
 import { useNavigate } from 'react-router-dom';
-import { getServersList } from '../services/api.service';
+import { getServerByOneMonth } from '../services/api.service';
 
 const INITIAL_SERVERS = [
     {
@@ -111,7 +111,7 @@ const ListPage = () => {
     const onInit = async () => {
         try {
             setLoading(() => true);
-            const serversData = await getServersList();
+            const serversData = await getServerByOneMonth();
             setServers((prev) => [...serversData]);
         } catch (e) {
             console.log(e);
@@ -125,18 +125,19 @@ const ListPage = () => {
     }, []);
 
     return (
-        <>
+        <div>
             {
                 isLoading ? <Loading />
                     :
                     <div className='listpage'>
-                        <Box id="1234" name="Voldemart" cpu="89" ram="60" disk="37" />
-                        <Box id="1234" name="ConnectVerse" cpu="15" ram="20" disk="35" />
-                        <Box id="1234" name="LegalChain" cpu="52" ram="77" disk="12" />
-                        <Box id="1234" name="Innovatree" cpu="77" ram="80" disk="50" />
+                        {
+                            servers.map(server => (
+                                <Box id={server["id"]} name={server["name"]} cpu={server["maxCPUUsed"]} ram={server["maxRAMUsed"]} disk={server["maxDisc"]} />
+                            ))
+                        }
                     </div>
             }
-        </>
+        </div>
     )
 }
 
