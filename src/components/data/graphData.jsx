@@ -62,7 +62,7 @@ export const CPU_data = [
 export const Disk_columns = [
     { field: 'id', headerName: 'ID', width: 90, hide: true },
     {
-        field: 'filesystem',
+        field: 'fileSystem',
         headerName: 'File System',
         width: 150,
         flex:1,
@@ -89,7 +89,7 @@ export const Disk_columns = [
         // editable: true,
     },
     {
-        field: 'avail',
+        field: 'available',
         headerName: 'Avail',
         // type: 'number',
         width: 100,
@@ -98,7 +98,7 @@ export const Disk_columns = [
         // editable: true,
     },
     {
-        field: 'useper',
+        field: 'use',
         headerName: 'Use %',
         // type: 'number',
         width: 100,

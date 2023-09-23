@@ -5,7 +5,7 @@ import { Box, Grid, Paper, Typography } from '@mui/material'
 import Chart from '../components/chart';
 import { CPU_data, Disk_columns, Disk_rows, RAM_data } from '../components/data/graphData';
 import '../styles/index.css'
-import { getServer } from '../services/api.service';
+import { getOneMonth, getServer, getTodaysDate, getRAMCPUPoints } from '../services/api.service';
 import Loading from '../components/loading';
 
 
@@ -249,7 +249,6 @@ const SERVER_DATA = {
 };
 
 const Charts = () => {
-    
     const { id } = useParams();
 
     const [columnVisibilityModel, setColumnVisibilityModel] = useState({
@@ -261,13 +260,28 @@ const Charts = () => {
 
     const [isLoading, setLoading] = useState(false);
     const [server, setServer] = useState(SERVER_DATA);
+    const [disc, setDisc] = useState(Disk_rows);
+    const [ramPoints, setRAMPoints] = useState(RAM_data);
+    const [cpuPoints, setCPUPoints] = useState(CPU_data);
 
     const onInit = async () => {
         try {
             setLoading(() => true);
-            const serverData = await getServer(id);
-            setServer((prev) => ({ serverData }));
-            console.log("serverData ", serverData);
+            const today = getTodaysDate();
+            const oneMonthBefore = getOneMonth(today);
+            const serverData = await getServer(id, `${oneMonthBefore}T00:00`, `${today}T00:00`);
+            setServer(() => (serverData));
+            setDisc(() => {
+                try {
+                    return serverData["discStats"][serverData["discStats"].length - 1].discMounts.map(stst => { stst["id"] = stst["fileSystem"]; return stst; });
+                } catch (e) {
+                    return [];
+                }
+            });
+        
+            const { ramReturn, cpuReturn } = getRAMCPUPoints(serverData);
+            setCPUPoints(() => cpuReturn);
+            setRAMPoints(() => ramReturn);
         } catch (e) {
             console.log("error: ", e);
         } finally {
@@ -303,10 +317,9 @@ const Charts = () => {
                                 direction="column"
                                 justifyContent="center"
                                 alignItems="center"
-
                             >
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
-                                    76
+                                    { "" + server["maxCPUUsed"] }
                                 </Typography></Grid>
                                 <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
                                     CPU Utilization %
@@ -321,7 +334,7 @@ const Charts = () => {
                                 alignItems="center"
                             >
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
-                                    86
+                                    { "" + server["maxRAMUsed"] }
                                 </Typography></Grid>
                                 <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
                                     RAM Utilization %
@@ -336,7 +349,7 @@ const Charts = () => {
                                 alignItems="center"
                             >
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
-                                    34
+                                    { "" + server["maxDisc"] }
                                 </Typography></Grid>
                                 <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
                                     DISK Utilization %
@@ -351,10 +364,10 @@ const Charts = () => {
                                 alignItems="center"
                             >
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
-                                    40
+                                    { server.isActive ? "Active" : "Stopped" }
                                 </Typography></Grid>
                                 <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
-                                    Overall Utilization %
+                                    Is Active and Running
                                 </Typography></Grid>
                             </Grid>
                         </Paper></Grid>
@@ -397,16 +410,16 @@ const Charts = () => {
                                             setCpu(false);
                                             setDisk(false);
                                             setRam(true);
-                                        }}>MEMORY</button>
+                                        }}>RAM</button>
                                         </Grid>
                                     </Grid>
                                 </Grid>
                                 <Grid item lg={9} md={9} sm={10}>
-                                    {isCpu ? <Chart data={CPU_data} name="cpu" color="#3185FC" /> : <></>}
+                                    {isCpu ? <Chart data={cpuPoints} name="cpu" color="#3185FC" /> : <></>}
                                     {isDisk ? <Box sx={{ height: 400, width: '100%', boxShadow: 1, marginTop: 3 }}>
                                         <DataGrid
                                             sx={{ color: "#fff" }}
-                                            rows={Disk_rows}
+                                            rows={disc}
                                             columns={Disk_columns}
                                             columnVisibilityModel={columnVisibilityModel}
                                             initialState={{
@@ -421,7 +434,7 @@ const Charts = () => {
                                             disableRowSelectionOnClick
                                         />
                                     </Box> : <></>}
-                                    {isRam ? <Chart data={RAM_data} name="ram" color="#3185FC" /> : <></>}
+                                    {isRam ? <Chart data={ramPoints} name="ram" color="#3185FC" /> : <></>}
                                 </Grid>
                             </Grid>
 
