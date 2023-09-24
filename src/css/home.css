@@ -1,67 +1,69 @@
 
 .home-container {
-    background:url('../assests/back4.jpg');
-    color: white;
-    height: 100vh;
+    /* background:url('../assests/back4.jpg'); */
+    color: rgb(0, 0, 0);
+    height: 90vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     animation: fadeIn 2s ease-in-out;
-    padding: 100px ,0px;
   }
   .services-container{
-    padding-top: 200px;
-    background-color: black;
-    color: white;
+    color: rgb(0, 0, 0);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    /* align-items: center; */
     text-align: center;
     animation: fadeIn 2s ease-in-out;
   }
 
-.service-subtitle{
-  font-size: 1.5rem;
-  font-family: 'Pacifico', cursive;
-  text-decoration: none;
+.learn-more{
+  width: 100px;
+  height: 40px;
+  background-color: black;
   color: white;
+  font-weight: 400;
 }
-
-/* The rest of your CSS styles remain the same */
-
-  #total-box{
-    padding-top: 100px;
-    padding-bottom: 300px;
-  }
+.signup-redirect{
+  width: 100px;
+  background-color: white;
+  color: black;
+  height: 40px;
+  border: 1px solid black;
+  text-decoration: none;
+  font-weight: 400;
+}
+ 
   .home-title {
     font-size: 3rem;
+    font-weight: 700;
     margin-bottom: 1rem;
-    font-family: 'Tilt Prism', cursive;
   }
   
   .home-description {
-    font-size: 1.5rem;
-    font-family: 'Pacifico', cursive;
+    font-size: 1.2rem;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: 400;
   }
 
-  .box-service{
-    border: 1px solid white;
-    height: 80px;
-    width: 250px;
-    align-items: center;
-    position: relative;
-    padding-top: 15px;
-    border-radius: 10px;
+  .home-image{
+    height: 80vh;
+    width: 98.7vw;
+  }
+  .home-image-container{
+    margin-top: 20px;
+  }
+
+  a{
+    color: inherit;
     text-decoration: none;
   }
 
-  .service-title{
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    font-family: 'Tilt Prism', cursive;
+  .spacer{
+    margin-top: 200px;
   }
 
   @keyframes fadeIn {
@@ -72,27 +74,120 @@
       opacity: 1;
     }
   }
-  
-  .box{
-    padding-top: 10px;
-    height: 10px;
-    width: 20px;
-    border: 1px solid white;
-    position: relative;
-    border-radius: 50px;
-    animation-name: rotation;
-    animation-duration: 3s;
-    animation-iteration-count: infinite;
+
+  #box{
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 150px;
+}
+#icon-spacing{
+  padding-bottom: 30px;
+}
+
+  .box-title{
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .box-description{
+    font-size: 0.9rem;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: 400;
   }
 
-  @keyframes rotation {
-    0%   {background-color:rgb(255, 255, 255); left:0px; top:0px; transform: rotate(0deg);}
-    16%  {background-color:rgb(255, 255, 255); left:300px; top:0px;transform: rotate(360deg);}
-    32%  {background-color:rgb(255, 255, 255); left:300px; top:150px;transform: rotate(0deg);}
-    48%  {background-color:rgb(255, 255, 255); left:-300px; top:150px;transform: rotate(360deg);}
-    64% {background-color:rgb(255, 255, 255); left:-300px; top:0px;transform: rotate(0deg);}
-    100% {background-color:rgb(255, 255, 255); left:0px; top:0px;transform: rotate(360deg);}
+  .service-alignment-container{
+    color: rgb(0, 0, 0);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    animation: fadeIn 2s ease-in-out;
   }
+
+  .learn-more1{
+    width: 100px;
+    height: 40px;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    border: 1px solid black;
+    font-weight: 400;
+  }
+  .signup-redirect1{
+    width: 100px;
+    background-color: white;
+    color: black;
+    height: 40px;
+    text-decoration: none;
+    font-weight: 400;
+  }
+
+  #efficiency-container{
+    margin-top: 200px;
+  }
+  .efficiency-title{
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-align: left;
+  }
+  .efficiency-description{ 
+    font-size: 1rem;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: 900;
+    text-align: left;
+  }
+  .efficiency-alignment-container{
+    color: rgb(0, 0, 0);
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: left;
+    text-align: left;
+    animation: fadeIn 2s ease-in-out;
+  }
+
+  .efficiency-image{
+    height: 80vh;
+    width: 84vw;
+    margin-top: 40px;
+  }
+
+  .insights-container{
+    color: rgb(0, 0, 0);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    animation: fadeIn 2s ease-in-out;
+    margin-top: 200px;
+  }
+  .card{
+    width: 18rem;
+  }
+  .card-img-top{
+    height: 12rem;
+  }
+  #insight-cards{
+    margin-top: 50px;
+    
+  }
+  .services-icons{
+    margin-top: 100px;
+
+  }
+
+  .icon-font{
+    font-size: large;
+  }
+  .space1{
+    margin-top: 100px;
+  }
+
+  
+
   
 
 
