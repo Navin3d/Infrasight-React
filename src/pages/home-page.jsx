@@ -111,6 +111,43 @@ const HomePage = () => {
                         </div>    
                     </div>
 
+                    {/* SERVICES */}
+                    <div className="insights-container">
+                    <p className="home-description">Services</p>
+                    <h1 className="home-title">Look at the services<br></br> we provide!</h1>
+                    <p className="home-description">Be secure , safe and productive with the services of Infrasight</p>
+                    </div> 
+
+                    {/* SERVICE ICONS */}
+                    <div className="services-icons">
+                    <div className="row">
+                        <div className="col">
+                        <i id="icon-spacing" className="fa fa-computer fa-4x" aria-hidden="true"></i>
+                        <h2 className="icon-font">Performance Monitering</h2>
+                        </div>
+                        <div className="col">
+                        <i id="icon-spacing" className="fa fa-lock fa-4x" aria-hidden="true"></i>
+                        <h2 className="icon-font">Security Monitering</h2>
+                        </div>
+                        <div className="col">
+                        <i id="icon-spacing" className="fa fa-virus fa-4x" aria-hidden="true"></i>
+                        <h2 className="icon-font">Malware detection</h2>
+                        </div>
+                    {/* </div> */}
+                    {/* <div className="space1"></div> */}
+                    {/* <div className="row"> */}
+                    <div className="col">
+                        <i id="icon-spacing" className="fa fa-bar-chart fa-4x" aria-hidden="true"></i>
+                        <h2 className="icon-font">Scaling up</h2>
+                        </div>
+                        <div className="col">
+                        <i id="icon-spacing" className="fa fa-robot fa-4x" aria-hidden="true"></i>
+                        <h2 className="icon-font">Automation</h2>
+                        </div>
+                    </div>
+                    </div>
+
+
                     {/* INSIGHTS */}
 
                     <div className="insights-container">
