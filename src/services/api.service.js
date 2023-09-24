@@ -15,6 +15,39 @@ export const login = async (loginData) => {
     }
 }
 
+export const getUsersServer = async () => {
+    const to = getTodaysDate();
+    const from = getOneMonth(to);
+    try {
+        const query = `query {
+            userServers(userId: "650d487999abc94d769daf54", from: "${from}", to: "${to}") {
+                id
+                name
+                ramCPU {
+                    availableRam,
+                    totalRam,
+                    cpuPerformance,
+                },
+                discStats {
+                    discMounts {
+                        use,
+                    },
+                }
+            }
+        }`;
+        const { data } = await axios.post(PRESENTATIONURL, { query });
+        let returnServers = [];
+        for (let server of data["data"]["userServers"]) {
+            returnServers.push(getMaxFromServer(server));
+        }
+        console.log(returnServers);
+        return returnServers;
+    } catch (e) {
+        console.log(e);
+        throw e;
+    }
+}
+
 export const getServerByOneMonth = async () => {
     const to = getTodaysDate();
     const from = getOneMonth(to);
@@ -150,7 +183,7 @@ export const getTodaysDate = () => {
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
+    const day = String(today.getDate() + 1).padStart(2, '0');
     return `${year}-${month}-${day}`;
 }
 

@@ -353,6 +353,7 @@ const Charts = () => {
             const { ramReturn, cpuReturn } = getRAMCPUPoints(serverData);
             setCPUPoints(() => cpuReturn);
             setRAMPoints(() => ramReturn);
+            console.log(ramReturn);
         } catch (e) {
             console.log("error: ", e);
         } finally {

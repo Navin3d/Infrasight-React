@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Box from '../components/box'
 import Loading from '../components/loading'
 import { useNavigate } from 'react-router-dom';
-import { getServerByOneMonth } from '../services/api.service';
+import { getServerByOneMonth, getUsersServer } from '../services/api.service';
 
 const INITIAL_SERVERS = [
     {
@@ -113,7 +113,7 @@ const ListPage = () => {
     const onInit = async () => {
         try {
             setLoading(() => true);
-            const serversData = await getServerByOneMonth();
+            const serversData = await getUsersServer();
             setServers((prev) => [...serversData]);
         } catch (e) {
             console.log(e);
