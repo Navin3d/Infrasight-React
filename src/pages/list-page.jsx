@@ -104,6 +104,8 @@ const INITIAL_SERVERS = [
 
 const ListPage = () => {
     const navigate = useNavigate();
+    // const { user } = useContext(MyContext);
+
 
     const [isLoading, setLoading] = useState(false);
     const [servers, setServers] = useState(INITIAL_SERVERS);

@@ -34,6 +34,7 @@ const router = createBrowserRouter([
 const Router = () => (
     <div>
         <Navbar/>
+        
         <RouterProvider router={router} />
         <Footer/>
     </div>
