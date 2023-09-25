@@ -320,3 +320,32 @@ export const executeCommand = async (serverId, command) => {
         return [];
     }
 }
+
+export const getServerProject = async (id) => {
+    try {
+        const to = getTodaysDate();
+        const from = getOneMonth(to);
+        const query = `query {
+                server(id: "${id}", from: "${from}T00:00", to: "${to}T00:00") {
+                id
+                name
+                isActive
+                projects {
+                    id
+                    programmingLanguage
+                    framework
+                    ramCpuStats {
+                        cpuPerformance
+                        ramPerformance
+                        capturedAt
+                    }
+                }
+            }
+        }`;
+        const { data } = await axios.post(PRESENTATIONURL, { query });
+        return data["server"];
+    } catch (e) {
+        console.log(e);
+        return {};
+    }
+}
