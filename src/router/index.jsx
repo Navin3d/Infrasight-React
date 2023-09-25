@@ -7,6 +7,8 @@ import TaskManager from "../pages/charts-page";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Loading from "../components/loading";
+// import CourseDetail from "../pages/CourseDetail";
+import Addserverpage from "../pages/Addserverpage";
 
 const router = createBrowserRouter([
     {
@@ -28,6 +30,15 @@ const router = createBrowserRouter([
     {
         path: "/loading",
         element: <Loading />
+    },
+
+        // {
+        //     path: "/test",
+        //     element: <CourseDetail />
+        // },
+    {
+        path: "/addserver",
+        element: <Addserverpage />
     },
 ]);
 
