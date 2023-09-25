@@ -6,7 +6,7 @@ const Box = (props) => {
     const navigate = useNavigate();
 
     return (
-        <div className='list_box' onClick={() => { navigate(`/chart/${props.id}`) }}>
+        <div className='list_box' onClick={() => { navigate(`/server/detail/${props.id}`) }}>
             <div className='box_heading'><p className='box_heading'>{props.name}</p></div>
             <div className='box_divider'>
                 <hr style={{ background: 'grey' }} />

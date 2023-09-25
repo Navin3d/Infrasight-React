@@ -39,15 +39,15 @@ const router = createBrowserRouter([
         element: <Addserverpage />
     },
     {
-        path: "/test",
+        path: "/server/detail/:id",
         element: <Listdetailpage />
     },
     {
-        path: "/flow",
+        path: "/flow/:id",
         element: <Flowchart />
     },
     {
-        path: "/project",
+        path: "/project/:id",
         element: <ProjectStatsPage/>
     },
 ]);

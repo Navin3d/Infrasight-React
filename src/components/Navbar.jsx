@@ -1,4 +1,5 @@
 import React from 'react';
+import { isLoggedIn, logout } from '../services/api.service';
 import '../css/navbar.css';
 
 const Navbar = () => {
@@ -41,9 +42,12 @@ const Navbar = () => {
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="/login">
-              Login
-            </a>
+            {
+              !isLoggedIn() ? (
+              <a className="nav-link" href="/login">
+                Login
+              </a>) : (<button onClick={() => logout()}>Logout</button>)
+            }
           </li>
         </ul>
       </div>
