@@ -4,11 +4,46 @@ import axios from "axios";
 const BASEURL = "http://localhost:8081";
 const LOGINURL = `${BASEURL}/auth/login`;
 const PRESENTATIONURL = `${BASEURL}/graphql`;
+const CONSOLEURL = `${BASEURL}/console`;
+const SECURYCHECKURL = `${BASEURL}/console/scan`;
 
 export const login = async (loginData) => {
     try {
         const response = await axios.post(LOGINURL, loginData);
         return response;
+    } catch (e) {
+        console.log(e);
+        throw e;
+    }
+}
+
+export const getUsersServer = async () => {
+    const to = getTodaysDate();
+    const from = getOneMonth(to);
+    try {
+        const query = `query {
+            userServers(userId: "650d487999abc94d769daf54", from: "${from}", to: "${to}") {
+                id
+                name
+                ramCPU {
+                    availableRam,
+                    totalRam,
+                    cpuPerformance,
+                },
+                discStats {
+                    discMounts {
+                        use,
+                    },
+                }
+            }
+        }`;
+        const { data } = await axios.post(PRESENTATIONURL, { query });
+        let returnServers = [];
+        for (let server of data["data"]["userServers"]) {
+            returnServers.push(getMaxFromServer(server));
+        }
+        console.log(returnServers);
+        return returnServers;
     } catch (e) {
         console.log(e);
         throw e;
@@ -77,6 +112,7 @@ export const getServersList = async () => {
 export const getServer = async (id, from, to) => {
     let query = `query {
         server(id: "${id}", from: "${from}", to: "${to}") {
+            id
             name,
             description,
             host,
@@ -86,6 +122,9 @@ export const getServer = async (id, from, to) => {
                 totalRam,
                 cpuPerformance,
                 capturedAt
+                serverLoad
+                freeSwap
+                totalSwap
             },
             discStats {
                 discMounts {
@@ -98,11 +137,23 @@ export const getServer = async (id, from, to) => {
                 }
                 capturedAt
             }
+            ioStats {
+                ioDatas {
+                    device
+                    transferPerSecond
+                    readPerSecond
+                    writePerSecond
+                    averageRead
+                    averageWrite
+                }
+                capturedAt
+            }
         }
     }`;
     if (from != null && to != null)
         query = `query {
             server(id: "${id}", from: "${from}", to: "${to}") {
+                id
                 name,
                 description,
                 host,
@@ -112,6 +163,9 @@ export const getServer = async (id, from, to) => {
                     totalRam,
                     cpuPerformance,
                     capturedAt
+                    freeSwap
+                    totalSwap
+                    serverLoad
                 },
                 discStats {
                     discMounts {
@@ -121,6 +175,17 @@ export const getServer = async (id, from, to) => {
                         available,
                         size,
                         mountedOn
+                    }
+                    capturedAt
+                }
+                ioStats {
+                    ioDatas {
+                        device
+                        transferPerSecond
+                        readPerSecond
+                        writePerSecond
+                        averageRead
+                        averageWrite
                     }
                     capturedAt
                 }
@@ -150,7 +215,7 @@ export const getTodaysDate = () => {
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
+    const day = String(today.getDate() + 1).padStart(2, '0');
     return `${year}-${month}-${day}`;
 }
 
@@ -191,6 +256,8 @@ export const getRAMCPUPoints = (server) => {
     const rams = server["ramCPU"];
     let ramReturn = [];
     let cpuReturn = [];
+    let loadReturn = [];
+    let swapReturn = [];
     for (let ramCPU of rams) {
         const totalRam = ramCPU["totalRam"];
         const availableRam = ramCPU["availableRam"];
@@ -198,6 +265,10 @@ export const getRAMCPUPoints = (server) => {
         const ramUsePercentage = Math.round((usedRam / totalRam) * 100);
         const cpuUse = ramCPU["cpuPerformance"];
         const date = ramCPU["capturedAt"].split("T")[0];
+        const totalSwap = ramCPU["totalSwap"];
+        const freeSwap = ramCPU["freeSwap"];
+        const usedSwap = totalSwap - freeSwap;
+        const swapUsePercentage = Math.round((usedSwap / totalSwap) * 100);
         const ram = {
             name: date,
             ram: ramUsePercentage,
@@ -208,6 +279,44 @@ export const getRAMCPUPoints = (server) => {
             cpu: cpuUse,
         }
         cpuReturn.push(cpu);
+        const load = {
+            name: date,
+            load: ramCPU["serverLoad"]
+        }
+        loadReturn.push(load);
+        const swapData = {
+            name: date,
+            swap: swapUsePercentage
+        }
+        swapReturn.push(swapData);
     }
-    return { ramReturn, cpuReturn };
+    return { ramReturn, cpuReturn, loadReturn, swapReturn };
+}
+
+export const runSecuryCheck = async (id) => {
+    const { data, status } = await axios.get(`${SECURYCHECKURL}/${id}`);
+    if(status == 200) {
+        const { datas } = data;
+        console.log("datas: ", datas);
+        return datas;
+    }
+}
+
+export const executeCommand = async (serverId, command) => {
+    try {
+        const body = {
+            serverId,
+            command
+        }
+        const { status, data } = await axios.post(CONSOLEURL, body);
+        if(status == 200) {
+            const { datas } = data;
+            return datas;
+        } else {
+            return [];
+        }
+    } catch (e) {
+        console.log(e);
+        return [];
+    }
 }

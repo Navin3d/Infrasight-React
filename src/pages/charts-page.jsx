@@ -1,13 +1,73 @@
 import React, { useEffect, useState } from 'react';
+import swal from "sweetalert";
 import { useParams } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
-import { Box, Grid, Paper, Typography } from '@mui/material'
+import { Box, Button, Dialog, DialogTitle, Grid, Paper, TextField, Typography } from '@mui/material'
 import Chart from '../components/chart';
-import { CPU_data, Disk_columns, Disk_rows, RAM_data } from '../components/data/graphData';
+import { CPU_data, Disk_columns, Disk_rows, IO_columns, IO_rows, Load_data, RAM_data, Swap_data } from '../components/data/graphData';
 import '../styles/index.css'
-import { getOneMonth, getServer, getTodaysDate, getRAMCPUPoints } from '../services/api.service';
+import { getOneMonth, getServer, getTodaysDate, getRAMCPUPoints, runSecuryCheck, executeCommand } from '../services/api.service';
 import Loading from '../components/loading';
+import PropTypes from 'prop-types'
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import ListToParagraphs from '../components/ListToParagraphs';
+import { MobileDateTimePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 
+function FilterDialog(props) {
+    const { onClose, selectedValue, open } = props;
+
+    const handleClose = () => {
+        onClose(selectedValue);
+        DateFormatter(fromvalue);
+        DateFormatter(tovalue);
+    };
+    const [fromvalue, setFromValue] = useState(dayjs('2022-04-17T15:30'));
+    const [tovalue, setToValue] = useState(dayjs('2022-04-17T15:30'));
+
+    return (
+
+        <Dialog onClose={handleClose} open={open} >
+            <DialogTitle>Select Date and time</DialogTitle>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DateTimePicker']}>
+                    <h6 className='dialog_heading'>From:</h6>
+                    <DateTimePicker
+                        value={fromvalue}
+                        onChange={(newValue) => setFromValue(newValue)}
+                    />
+                    <h6 className='dialog_heading'>To:</h6>
+                    <DateTimePicker
+                        value={tovalue}
+                        onChange={(newValue) => setToValue(newValue)}
+                    />
+
+                </DemoContainer>
+            </LocalizationProvider>
+            <Button variant="contained" onClick={handleClose} sx={{ background: "#3185FC" }} endIcon={<FilterAltIcon />}>Filter</Button>
+        </Dialog>
+    );
+}
+
+function DateFormatter(props) {
+    const year = props.$y;
+    const month = String(props.$M + 1).padStart(2, '0'); // Month is 0-based
+    const day = String(props.$D).padStart(2, '0');
+    const hours = String(props.$H).padStart(2, '0');
+    const minutes = String(props.$m).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+    console.log(formattedDate);
+
+}
+// FilterDialog.propTypes = {
+//     onClose: PropTypes.func.isRequired,
+//     open: PropTypes.bool.isRequired,
+//     selectedValue: PropTypes.string.isRequired,
+// };
 
 const SERVER_DATA = {
     "name": "Ubuntu-Serve",
@@ -257,12 +317,26 @@ const Charts = () => {
     const [isCpu, setCpu] = useState(true);
     const [isRam, setRam] = useState(false);
     const [isDisk, setDisk] = useState(false);
+    const [isIO, setIO] = useState(false);
+    const [isSwap, setSwap] = useState(false);
+    const [isLoad, setLoad] = useState(false);
+    const [isSecCheck, setSecCheck] = useState(false);
+    const [isConsole, setConsole] = useState(false);
 
     const [isLoading, setLoading] = useState(false);
     const [server, setServer] = useState(SERVER_DATA);
     const [disc, setDisc] = useState(Disk_rows);
+    const [io, setio] = useState(IO_rows);
     const [ramPoints, setRAMPoints] = useState(RAM_data);
     const [cpuPoints, setCPUPoints] = useState(CPU_data);
+    const [loadPoints, setLoadPoints] = useState(Load_data);
+    const [swapPoints, setSwapPoints] = useState(Swap_data);
+    const [open, setOpen] = useState(false);
+    const [selectedValue, setSelectedValue] = useState();
+    const [consoleData, setConsoleData] = useState(['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8']);
+    const [securityCheckdata, SetSecurityCheckData] = useState(['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8']);
+
+    const [command, setCommand] = useState("free -m");
 
     const onInit = async () => {
         try {
@@ -278,22 +352,59 @@ const Charts = () => {
                     return [];
                 }
             });
-        
-            const { ramReturn, cpuReturn } = getRAMCPUPoints(serverData);
+
+            const { ramReturn, cpuReturn, loadReturn, swapReturn } = getRAMCPUPoints(serverData);
             setCPUPoints(() => cpuReturn);
             setRAMPoints(() => ramReturn);
+            // const ioData = await runSecuryCheck(id);
+            const allIOStats = serverData["ioStats"];
+            if (allIOStats[allIOStats.length - 1])
+                setio(() => allIOStats[allIOStats.length - 1]["ioDatas"].map(io => {
+                    io["id"] = io["device"];
+                    return io;
+                }));
+            else
+                setio(() => IO_rows);
+            setLoadPoints(() => loadReturn);
+            setSwapPoints(() => swapReturn);
+            console.log("serverData: ", swapReturn);
         } catch (e) {
             console.log("error: ", e);
         } finally {
             setLoading(() => false);
         }
     }
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = (value) => {
+        setOpen(false);
+        setSelectedValue(value);
+    };
+
+    const runSecurityCheck = async () => {
+        swal("Running!", "Wait for check to complete!", "success");
+        const data = await runSecuryCheck(id);
+        console.log("data: ", data);
+        SetSecurityCheckData(() => data);
+    }
+
+    const runConsoleCommand = async () => {
+        const data = await executeCommand(id, command);
+        setConsoleData(() => data);
+    }
 
     useEffect(() => {
         onInit();
+        setLoad(false);
+        setIO(false);
+        setSwap(false);
+        setSecCheck(false)
+        setCpu(true);
         setDisk(false);
         setRam(false);
-        setCpu(true);
+        setConsole(false);
     }, [])
 
     return (
@@ -319,7 +430,7 @@ const Charts = () => {
                                 alignItems="center"
                             >
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
-                                    { "" + server["maxCPUUsed"] }
+                                    {"" + server["maxCPUUsed"]}
                                 </Typography></Grid>
                                 <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
                                     CPU Utilization %
@@ -334,7 +445,7 @@ const Charts = () => {
                                 alignItems="center"
                             >
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
-                                    { "" + server["maxRAMUsed"] }
+                                    {"" + server["maxRAMUsed"]}
                                 </Typography></Grid>
                                 <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
                                     RAM Utilization %
@@ -349,7 +460,7 @@ const Charts = () => {
                                 alignItems="center"
                             >
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
-                                    { "" + server["maxDisc"] }
+                                    {"" + server["maxDisc"]}
                                 </Typography></Grid>
                                 <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
                                     DISK Utilization %
@@ -364,7 +475,7 @@ const Charts = () => {
                                 alignItems="center"
                             >
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
-                                    { server.isActive ? "Active" : "Stopped" }
+                                    {server.isActive ? "Active" : "Stopped"}
                                 </Typography></Grid>
                                 <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
                                     Is Active and Running
@@ -378,6 +489,7 @@ const Charts = () => {
                         direction="row"
                         justifyContent="center"
                         alignItems="center"
+                        sx={{ marginTop: 5 }}
                     >
                         <Grid item sm={10} md={10} lg={10}>
 
@@ -394,29 +506,123 @@ const Charts = () => {
                                         direction="column"
                                         justifyContent="space-around"
                                     >
+
                                         <Grid item><button className={`${isCpu ? "selected" : "list_items"}`}
                                             onClick={() => {
                                                 setCpu(true);
                                                 setDisk(false);
                                                 setRam(false);
+                                                setLoad(false);
+                                                setIO(false);
+                                                setSwap(false);
+                                                setSecCheck(false);
+                                                setConsole(false);
                                             }}
                                         >CPU</button></Grid>
                                         <Grid item><button className={`${isDisk ? "selected" : "list_items"}`} onClick={() => {
                                             setCpu(false);
                                             setDisk(true);
                                             setRam(false);
+                                            setLoad(false);
+                                            setIO(false);
+                                            setSwap(false);
+                                            setSecCheck(false);
+                                            setConsole(false);
                                         }}>DISK</button></Grid>
                                         <Grid item><button className={`${isRam ? "selected" : "list_items"}`} onClick={() => {
                                             setCpu(false);
                                             setDisk(false);
                                             setRam(true);
+                                            setLoad(false);
+                                            setIO(false);
+                                            setSwap(false);
+                                            setSecCheck(false);
+                                            setConsole(false);
                                         }}>RAM</button>
                                         </Grid>
+                                        <Grid item><button className={`${isIO ? "selected" : "list_items"}`}
+                                            onClick={() => {
+                                                setLoad(false);
+                                                setIO(true);
+                                                setSwap(false);
+                                                setSecCheck(false);
+                                                setCpu(false);
+                                                setDisk(false);
+                                                setRam(false);
+                                                setConsole(false);
+                                            }}
+                                        >I/O</button></Grid>
+                                        <Grid item><button className={`${isLoad ? "selected" : "list_items"}`}
+                                            onClick={() => {
+                                                setLoad(true);
+                                                setIO(false);
+                                                setSwap(false);
+                                                setSecCheck(false);
+                                                setCpu(false);
+                                                setDisk(false);
+                                                setRam(false);
+                                                setConsole(false);
+                                            }}
+                                        >LOAD</button></Grid>
+                                        <Grid item><button className={`${isSwap ? "selected" : "list_items"}`}
+                                            onClick={() => {
+                                                setLoad(false);
+                                                setIO(false);
+                                                setSwap(true);
+                                                setSecCheck(false);
+                                                setCpu(false);
+                                                setDisk(false);
+                                                setRam(false);
+                                                setConsole(false);
+                                            }}
+                                        >SWAP MEMORY</button></Grid>
+                                        <Grid item><button className={`${isSecCheck ? "selected" : "list_items"}`}
+                                            onClick={() => {
+                                                setLoad(false);
+                                                setIO(false);
+                                                setSwap(false);
+                                                setSecCheck(true);
+                                                setCpu(false);
+                                                setDisk(false);
+                                                setRam(false);
+                                                setConsole(false);
+                                                runSecurityCheck();
+                                            }}
+                                        >SECURITY CHECK</button></Grid>
+                                        <Grid item><button className={`${isConsole ? "selected" : "list_items"}`}
+                                            onClick={() => {
+                                                setLoad(false);
+                                                setIO(false);
+                                                setSwap(false);
+                                                setSecCheck(false);
+                                                setCpu(false);
+                                                setDisk(false);
+                                                setRam(false);
+                                                setConsole(true);
+                                            }}
+                                        >CONSOLE</button></Grid>
                                     </Grid>
                                 </Grid>
                                 <Grid item lg={9} md={9} sm={10}>
+
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="flex-end"
+                                        alignItems="center"
+                                    >
+
+                                        <div className='filter_container'>
+                                            <Button variant="contained" onClick={handleClickOpen} sx={{ background: "#3185FC" }} endIcon={<FilterAltIcon />}>Filter</Button>
+                                            <FilterDialog
+                                                selectedValue={selectedValue}
+                                                open={open}
+                                                onClose={handleClose}
+                                            />
+                                        </div>
+                                    </Grid>
                                     {isCpu ? <Chart data={cpuPoints} name="cpu" color="#3185FC" /> : <></>}
-                                    {isDisk ? <Box sx={{ height: 400, width: '100%', boxShadow: 1, marginTop: 3 }}>
+                                    {isDisk ? <Box sx={{ height: 600, width: '100%', boxShadow: 1, marginTop: 3 }}>
                                         <DataGrid
                                             sx={{ color: "#fff" }}
                                             rows={disc}
@@ -435,6 +641,81 @@ const Charts = () => {
                                         />
                                     </Box> : <></>}
                                     {isRam ? <Chart data={ramPoints} name="ram" color="#3185FC" /> : <></>}
+                                    {isLoad ? <Chart data={loadPoints} name="load" color="#3185FC" /> : <></>}
+                                    {isSwap ? <Chart data={swapPoints} name="swap" color="#3185FC" /> : <></>}
+                                    {isIO ? <Box sx={{ height: 600, width: '100%', boxShadow: 1, marginTop: 3 }}>
+                                        <DataGrid
+                                            sx={{ color: "#fff" }}
+                                            rows={io}
+                                            columns={IO_columns}
+                                            columnVisibilityModel={columnVisibilityModel}
+                                            initialState={{
+                                                pagination: {
+                                                    paginationModel: {
+                                                        pageSize: 10,
+                                                    },
+                                                },
+                                            }}
+                                            pageSizeOptions={[5]}
+
+                                            disableRowSelectionOnClick
+                                        />
+                                    </Box> : <></>}
+                                    {isConsole ? <Box sx={{ height: 600, width: '100%', boxShadow: 1, marginTop: 5, background: "grey" }}>
+
+
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            spacing={2}
+                                        >
+                                            <Grid item md={11} lg={11} sm={12}>
+                                                <TextField label="Command" onChange={(e) => { setCommand(e.target.value) }} fullWidth />
+                                            </Grid>
+                                        </Grid>
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            spacing={2}
+                                        >
+                                            <Grid item md={11} lg={11} sm={12}>
+                                                <div className='console_output'>
+                                                    <ListToParagraphs items={consoleData} />
+                                                </div>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            spacing={2}
+                                        >
+                                            <Grid item md={11} lg={11} sm={12}>
+                                                <div className='console_btn'><Button variant="contained" onClick={() => runConsoleCommand()} >Execute</Button></div>
+
+                                            </Grid>
+                                        </Grid>
+                                    </Box> : <></>}
+                                    {isSecCheck ? <Box sx={{ height: 600, width: '100%', boxShadow: 1, marginTop: 5, background: "grey" }}>
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            spacing={2}
+                                        >
+                                            <Grid item md={11} lg={11} sm={12}>
+                                                <div className='console_output'>
+                                                    <ListToParagraphs items={securityCheckdata} />
+                                                </div>
+                                            </Grid>
+                                        </Grid>
+                                    </Box> : <></>}
                                 </Grid>
                             </Grid>
 

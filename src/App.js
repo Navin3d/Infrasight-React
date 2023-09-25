@@ -1,11 +1,11 @@
 import Router from './router';
 import './styles/App.css';
 
-function App() {
+function App() {  
   return (
-    <div className="App">
-      <Router />
-    </div>
+      <div className="App">
+        <Router />
+      </div>
   );
 }
 

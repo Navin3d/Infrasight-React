@@ -66,6 +66,7 @@ export const Disk_columns = [
         headerName: 'File System',
         width: 150,
         flex:1,
+        type:'text',
         // align: "center",
         // colSpan: 2,
         // editable: true,
@@ -73,7 +74,7 @@ export const Disk_columns = [
     {
         field: 'size',
         headerName: 'Size',
-        // type: 'number',
+        type: 'number',
         width: 100,
         flex: 1,
         // align: "center",
@@ -82,7 +83,7 @@ export const Disk_columns = [
     {
         field: 'used',
         headerName: 'Used',
-        // type: 'number',
+        type: 'number',
         width: 100,
         flex: 1,
         // align: "center"
@@ -91,7 +92,7 @@ export const Disk_columns = [
     {
         field: 'available',
         headerName: 'Avail',
-        // type: 'number',
+        type: 'number',
         width: 100,
         flex: 1,
         // align: "center"
@@ -100,7 +101,7 @@ export const Disk_columns = [
     {
         field: 'use',
         headerName: 'Use %',
-        // type: 'number',
+        type: 'number',
         width: 100,
         flex: 1,
         // align: "center",
@@ -120,7 +121,7 @@ export const Disk_columns = [
         width: 150,
         // align: "center",
         type: 'text',
-        colSpan: 2,
+        // colSpan: 2,
         flex: 1,
         // editable: true,
     },
@@ -261,4 +262,199 @@ export const RAM_data = [
         // pv: 4300,
         ram: 70,
     },
+];
+export const Load_data = [
+    {
+        name: 'Day 1',
+        // uv: 4000,
+        // pv: 2400,
+        load: 25,
+    },
+    {
+        name: 'Day 2',
+        // uv: 3000,
+        // pv: 1398,
+        load: 45,
+    },
+    {
+        name: 'Day 3',
+        // uv: 2000,
+        // pv: 9800,
+        load: 33,
+    },
+    {
+        name: 'Day 4',
+        // pv: 3908,
+        load: 50,
+    },
+    {
+        name: 'Day 5',
+        // uv: 1890,
+        // pv: 4800,
+        load: 75,
+    },
+    {
+        name: 'Day 6',
+        // uv: 2390,
+        // pv: 3800,
+        load: 20,
+    },
+    {
+        name: 'Day 7',
+        // uv: 3490,
+        // pv: 4300,
+        load: 20,
+    },
+    {
+        name: 'Day 8',
+        // uv: 1890,
+        // pv: 4800,
+        load: 15,
+    },
+    {
+        name: 'Day 9',
+        // uv: 2390,
+        // pv: 3800,
+        load: 35,
+    },
+    {
+        name: 'Day 10',
+        // uv: 3490,
+        // pv: 4300,
+        load: 70,
+    },
+];
+export const Swap_data = [
+    {
+        name: 'Day 1',
+        // uv: 4000,
+        // pv: 2400,
+        swap: 25,
+    },
+    {
+        name: 'Day 2',
+        // uv: 3000,
+        // pv: 1398,
+        swap: 45,
+    },
+    {
+        name: 'Day 3',
+        // uv: 2000,
+        // pv: 9800,
+        swap: 33,
+    },
+    {
+        name: 'Day 4',
+        // pv: 3908,
+        swap: 50,
+    },
+    {
+        name: 'Day 5',
+        // uv: 1890,
+        // pv: 4800,
+        swap: 75,
+    },
+    {
+        name: 'Day 6',
+        // uv: 2390,
+        // pv: 3800,
+        swap: 20,
+    },
+    {
+        name: 'Day 7',
+        // uv: 3490,
+        // pv: 4300,
+        swap: 20,
+    },
+    {
+        name: 'Day 8',
+        // uv: 1890,
+        // pv: 4800,
+        swap: 15,
+    },
+    {
+        name: 'Day 9',
+        // uv: 2390,
+        // pv: 3800,
+        swap: 35,
+    },
+    {
+        name: 'Day 10',
+        // uv: 3490,
+        // pv: 4300,
+        swap: 70,
+    },
+];
+
+export const IO_columns = [
+    { field: 'id', headerName: 'ID', width: 90, hide: true },
+    {
+        field: 'device',
+        headerName: 'File System',
+        width: 150,
+        flex: 1,
+        type:'text',
+        // align: "center",
+        // colSpan: 2,
+        // editable: true,
+    },
+    {
+        field: 'transferPerSecond',
+        headerName: 'Transfer per second',
+        type: 'number',
+        width: 100,
+        flex: 1,
+        // align: "center",
+        // editable: true,
+    },
+    {
+        field: 'readPerSecond',
+        headerName: 'Read per sec',
+        type: 'number',
+        width: 100,
+        flex: 1,
+        // align: "center"
+        // editable: true,
+    },
+    {
+        field: 'writePerSecond',
+        headerName: 'Write per sec',
+        type: 'number',
+        width: 100,
+        flex: 1,
+        // align: "center"
+        // editable: true,
+    },
+    {
+        field: 'averageRead',
+        headerName: 'Average Read',
+        width: 150,
+        // align: "center",
+        type: 'number',
+        // colSpan: 2,
+        flex: 1,
+        // editable: true,
+    },
+    {
+        field: 'averageWrite',
+        headerName: 'Average Write',
+        width: 150,
+        // align: "center",
+        type: 'number',
+        // colSpan: 2,
+        flex: 1,
+        // editable: true,
+    },
+];
+export const IO_rows = [
+    { id: 1, device: 'Scanner', tps: 10, mB_reads: 35, mB_wrtns: 28, mB_read: 20, mB_wrtn: 30 },
+    { id: 2, device: 'Scanner', tps: 10, mB_reads: 35, mB_wrtns: 28, mB_read: 20, mB_wrtn: 30 },
+    { id: 3, device: 'Scanner', tps: 10, mB_reads: 35, mB_wrtns: 28, mB_read: 20, mB_wrtn: 30 },
+    { id: 4, device: 'Scanner', tps: 10, mB_reads: 35, mB_wrtns: 28, mB_read: 20, mB_wrtn: 30 },
+    { id: 5, device: 'Scanner', tps: 10, mB_reads: 35, mB_wrtns: 28, mB_read: 20, mB_wrtn: 30 },
+    { id: 6, device: 'Scanner', tps: 10, mB_reads: 35, mB_wrtns: 28, mB_read: 20, mB_wrtn: 30 },
+    { id: 7, device: 'Scanner', tps: 10, mB_reads: 35, mB_wrtns: 28, mB_read: 20, mB_wrtn: 30 },
+    { id: 8, device: 'Scanner', tps: 10, mB_reads: 35, mB_wrtns: 28, mB_read: 20, mB_wrtn: 30 },
+    { id: 9, device: 'Scanner', tps: 10, mB_reads: 35, mB_wrtns: 28, mB_read: 20, mB_wrtn: 30 },
+    { id: 10, device: 'Scanner', tps: 10, mB_reads: 35, mB_wrtns: 28, mB_read: 20, mB_wrtn: 30 },
 ];

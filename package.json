@@ -36,6 +36,7 @@
     "react-tabs": "^5.1.0",
     "reactflow": "^11.8.3",
     "recharts": "^2.8.0",
+    "sweetalert": "^2.1.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
