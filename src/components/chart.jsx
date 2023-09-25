@@ -1,29 +1,8 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Filler,
-    Legend,
-} from 'chart.js';
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import "../styles/components/chart.css";
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Filler,
-    Legend
-);
 const Chart = (props) => {
 
     return (
@@ -44,7 +23,7 @@ const Chart = (props) => {
                 >
 
                     <CartesianGrid strokeDasharray="3 3" />
-                    <Legend iconSize={20} iconType='square' verticalAlign="top" height={12} />
+                    {/* <Legend iconSize={20} iconType='square' verticalAlign="top" height={12} /> */}
                     <XAxis dataKey="name" />
                     <YAxis label={{
                         // value: 'Utilization %', angle: '-90', position: 'Insideleft'

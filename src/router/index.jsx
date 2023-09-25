@@ -9,6 +9,9 @@ import Footer from "../components/Footer";
 import Loading from "../components/loading";
 import Addserverpage from "../pages/Addserverpage";
 import Listdetailpage from "../pages/Listdetailpage";
+// import LayoutFlow from "../components/flowchart";
+import Flowchart from "../pages/flowchart-page";
+import ProjectStatsPage from "../pages/projectStatsPage";
 
 const router = createBrowserRouter([
     {
@@ -38,7 +41,15 @@ const router = createBrowserRouter([
     {
         path: "/test",
         element: <Listdetailpage />
-    }
+    },
+    {
+        path: "/flow",
+        element: <Flowchart />
+    },
+    {
+        path: "/project",
+        element: <ProjectStatsPage/>
+    },
 ]);
 
 const Router = () => (
