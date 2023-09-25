@@ -18,6 +18,7 @@ const HomePage = () => {
                         <button className="learn-more">Learn more</button>
                         </div>
                         <div className="col-md-6">
+                            
                         <button className="signup-redirect"><a href="/login">Signup</a></button>
                         </div>
                     </div>
@@ -32,7 +33,7 @@ const HomePage = () => {
             
             <div className="services-container">
                     <p className="home-description">Simplified</p>
-                    <h1 className="home-title">
+                    <h1 className="home-title"> 
                         Effortlessly Moniter Your Servers <br></br> with Infrasight
                     </h1>
                     <p className="home-description">
