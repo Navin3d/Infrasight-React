@@ -399,7 +399,7 @@ export const IO_columns = [
         // editable: true,
     },
     {
-        field: 'tps',
+        field: 'transferPerSecond',
         headerName: 'Transfer per second',
         type: 'number',
         width: 100,
@@ -408,7 +408,7 @@ export const IO_columns = [
         // editable: true,
     },
     {
-        field: 'mB_reads',
+        field: 'readPerSecond',
         headerName: 'Read per sec',
         type: 'number',
         width: 100,
@@ -417,7 +417,7 @@ export const IO_columns = [
         // editable: true,
     },
     {
-        field: 'mB_wrtns',
+        field: 'writePerSecond',
         headerName: 'Write per sec',
         type: 'number',
         width: 100,
@@ -426,7 +426,7 @@ export const IO_columns = [
         // editable: true,
     },
     {
-        field: 'mB_read',
+        field: 'averageRead',
         headerName: 'Average Read',
         width: 150,
         // align: "center",
@@ -436,7 +436,7 @@ export const IO_columns = [
         // editable: true,
     },
     {
-        field: 'mB_wrtn',
+        field: 'averageWrite',
         headerName: 'Average Write',
         width: 150,
         // align: "center",

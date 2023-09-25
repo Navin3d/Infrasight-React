@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import swal from "sweetalert";
 import { useParams } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, Button, Dialog, DialogTitle, Grid, Paper, TextField, Typography } from '@mui/material'
 import Chart from '../components/chart';
 import { CPU_data, Disk_columns, Disk_rows, IO_columns, IO_rows, Load_data, RAM_data, Swap_data } from '../components/data/graphData';
 import '../styles/index.css'
-import { getOneMonth, getServer, getTodaysDate, getRAMCPUPoints } from '../services/api.service';
+import { getOneMonth, getServer, getTodaysDate, getRAMCPUPoints, runSecuryCheck, executeCommand } from '../services/api.service';
 import Loading from '../components/loading';
 import PropTypes from 'prop-types'
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
@@ -32,27 +33,27 @@ function FilterDialog(props) {
 
         <Dialog onClose={handleClose} open={open} >
             <DialogTitle>Select Date and time</DialogTitle>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DateTimePicker']}>
-                        <h6 className='dialog_heading'>From:</h6>
-                        <DateTimePicker
-                            value={fromvalue}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DateTimePicker']}>
+                    <h6 className='dialog_heading'>From:</h6>
+                    <DateTimePicker
+                        value={fromvalue}
                         onChange={(newValue) => setFromValue(newValue)}
-                        />
+                    />
                     <h6 className='dialog_heading'>To:</h6>
                     <DateTimePicker
                         value={tovalue}
                         onChange={(newValue) => setToValue(newValue)}
                     />
-                    
-                    </DemoContainer>
-                </LocalizationProvider>
-                <Button variant="contained" onClick={handleClose} sx={{ background: "#3185FC" }} endIcon={<FilterAltIcon />}>Filter</Button>
+
+                </DemoContainer>
+            </LocalizationProvider>
+            <Button variant="contained" onClick={handleClose} sx={{ background: "#3185FC" }} endIcon={<FilterAltIcon />}>Filter</Button>
         </Dialog>
     );
 }
 
-function DateFormatter(props){
+function DateFormatter(props) {
     const year = props.$y;
     const month = String(props.$M + 1).padStart(2, '0'); // Month is 0-based
     const day = String(props.$D).padStart(2, '0');
@@ -332,8 +333,10 @@ const Charts = () => {
     const [swapPoints, setSwapPoints] = useState(Swap_data);
     const [open, setOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState();
-    const items = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
-    const items2 = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8'];
+    const [consoleData, setConsoleData] = useState(['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8']);
+    const [securityCheckdata, SetSecurityCheckData] = useState(['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8']);
+
+    const [command, setCommand] = useState("free -m");
 
     const onInit = async () => {
         try {
@@ -349,11 +352,22 @@ const Charts = () => {
                     return [];
                 }
             });
-        
-            const { ramReturn, cpuReturn } = getRAMCPUPoints(serverData);
+
+            const { ramReturn, cpuReturn, loadReturn, swapReturn } = getRAMCPUPoints(serverData);
             setCPUPoints(() => cpuReturn);
             setRAMPoints(() => ramReturn);
-            console.log(ramReturn);
+            // const ioData = await runSecuryCheck(id);
+            const allIOStats = serverData["ioStats"];
+            if (allIOStats[allIOStats.length - 1])
+                setio(() => allIOStats[allIOStats.length - 1]["ioDatas"].map(io => {
+                    io["id"] = io["device"];
+                    return io;
+                }));
+            else
+                setio(() => IO_rows);
+            setLoadPoints(() => loadReturn);
+            setSwapPoints(() => swapReturn);
+            console.log("serverData: ", swapReturn);
         } catch (e) {
             console.log("error: ", e);
         } finally {
@@ -369,6 +383,17 @@ const Charts = () => {
         setSelectedValue(value);
     };
 
+    const runSecurityCheck = async () => {
+        swal("Running!", "Wait for check to complete!", "success");
+        const data = await runSecuryCheck(id);
+        console.log("data: ", data);
+        SetSecurityCheckData(() => data);
+    }
+
+    const runConsoleCommand = async () => {
+        const data = await executeCommand(id, command);
+        setConsoleData(() => data);
+    }
 
     useEffect(() => {
         onInit();
@@ -405,7 +430,7 @@ const Charts = () => {
                                 alignItems="center"
                             >
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
-                                    { "" + server["maxCPUUsed"] }
+                                    {"" + server["maxCPUUsed"]}
                                 </Typography></Grid>
                                 <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
                                     CPU Utilization %
@@ -420,7 +445,7 @@ const Charts = () => {
                                 alignItems="center"
                             >
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
-                                    { "" + server["maxRAMUsed"] }
+                                    {"" + server["maxRAMUsed"]}
                                 </Typography></Grid>
                                 <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
                                     RAM Utilization %
@@ -435,7 +460,7 @@ const Charts = () => {
                                 alignItems="center"
                             >
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
-                                    { "" + server["maxDisc"] }
+                                    {"" + server["maxDisc"]}
                                 </Typography></Grid>
                                 <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
                                     DISK Utilization %
@@ -450,7 +475,7 @@ const Charts = () => {
                                 alignItems="center"
                             >
                                 <Grid item><Typography variant="h3" color="#3185FC" gutterBottom>
-                                    { server.isActive ? "Active" : "Stopped" }
+                                    {server.isActive ? "Active" : "Stopped"}
                                 </Typography></Grid>
                                 <Grid item><Typography variant="subtitle2" color="white" gutterBottom>
                                     Is Active and Running
@@ -464,7 +489,7 @@ const Charts = () => {
                         direction="row"
                         justifyContent="center"
                         alignItems="center"
-                        sx={{marginTop:5}}
+                        sx={{ marginTop: 5 }}
                     >
                         <Grid item sm={10} md={10} lg={10}>
 
@@ -481,7 +506,7 @@ const Charts = () => {
                                         direction="column"
                                         justifyContent="space-around"
                                     >
-                                        
+
                                         <Grid item><button className={`${isCpu ? "selected" : "list_items"}`}
                                             onClick={() => {
                                                 setCpu(true);
@@ -561,6 +586,7 @@ const Charts = () => {
                                                 setDisk(false);
                                                 setRam(false);
                                                 setConsole(false);
+                                                runSecurityCheck();
                                             }}
                                         >SECURITY CHECK</button></Grid>
                                         <Grid item><button className={`${isConsole ? "selected" : "list_items"}`}
@@ -586,14 +612,14 @@ const Charts = () => {
                                         alignItems="center"
                                     >
 
-                                    <div className='filter_container'>
-                                    <Button variant="contained" onClick={handleClickOpen} sx={{ background:"#3185FC"}} endIcon={<FilterAltIcon />}>Filter</Button>
-                                    <FilterDialog
-                                            selectedValue={selectedValue}
-                                            open={open}
-                                            onClose={handleClose}
+                                        <div className='filter_container'>
+                                            <Button variant="contained" onClick={handleClickOpen} sx={{ background: "#3185FC" }} endIcon={<FilterAltIcon />}>Filter</Button>
+                                            <FilterDialog
+                                                selectedValue={selectedValue}
+                                                open={open}
+                                                onClose={handleClose}
                                             />
-                                    </div>
+                                        </div>
                                     </Grid>
                                     {isCpu ? <Chart data={cpuPoints} name="cpu" color="#3185FC" /> : <></>}
                                     {isDisk ? <Box sx={{ height: 600, width: '100%', boxShadow: 1, marginTop: 3 }}>
@@ -635,9 +661,9 @@ const Charts = () => {
                                             disableRowSelectionOnClick
                                         />
                                     </Box> : <></>}
-                                    {isConsole ? <Box sx={{ height: 600, width: '100%', boxShadow: 1, marginTop: 5,  background:"grey"}}>
-                                        
-                                        
+                                    {isConsole ? <Box sx={{ height: 600, width: '100%', boxShadow: 1, marginTop: 5, background: "grey" }}>
+
+
                                         <Grid
                                             container
                                             direction="row"
@@ -646,22 +672,9 @@ const Charts = () => {
                                             spacing={2}
                                         >
                                             <Grid item md={11} lg={11} sm={12}>
-                                            <TextField label="Command" fullWidth />
+                                                <TextField label="Command" onChange={(e) => { setCommand(e.target.value) }} fullWidth />
                                             </Grid>
-                                        </Grid> 
-                                            <Grid
-                                                container
-                                                direction="row"
-                                                justifyContent="center"
-                                                alignItems="center"
-                                                spacing={2}
-                                            >
-                                                <Grid item md={11} lg={11} sm={12}>
-                                                    <div className='console_output'>
-                                                    <ListToParagraphs items={items}/>
-                                                    </div>
-                                                </Grid>
-                                            </Grid> 
+                                        </Grid>
                                         <Grid
                                             container
                                             direction="row"
@@ -670,10 +683,23 @@ const Charts = () => {
                                             spacing={2}
                                         >
                                             <Grid item md={11} lg={11} sm={12}>
-                                                <div className='console_btn'><Button variant="contained" >Execute</Button></div>
-                                                
+                                                <div className='console_output'>
+                                                    <ListToParagraphs items={consoleData} />
+                                                </div>
                                             </Grid>
-                                        </Grid> 
+                                        </Grid>
+                                        <Grid
+                                            container
+                                            direction="row"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            spacing={2}
+                                        >
+                                            <Grid item md={11} lg={11} sm={12}>
+                                                <div className='console_btn'><Button variant="contained" onClick={() => runConsoleCommand()} >Execute</Button></div>
+
+                                            </Grid>
+                                        </Grid>
                                     </Box> : <></>}
                                     {isSecCheck ? <Box sx={{ height: 600, width: '100%', boxShadow: 1, marginTop: 5, background: "grey" }}>
                                         <Grid
@@ -685,10 +711,10 @@ const Charts = () => {
                                         >
                                             <Grid item md={11} lg={11} sm={12}>
                                                 <div className='console_output'>
-                                                    <ListToParagraphs items={items2} />
+                                                    <ListToParagraphs items={securityCheckdata} />
                                                 </div>
                                             </Grid>
-                                        </Grid> 
+                                        </Grid>
                                     </Box> : <></>}
                                 </Grid>
                             </Grid>
