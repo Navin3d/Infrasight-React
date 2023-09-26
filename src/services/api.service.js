@@ -381,7 +381,7 @@ export const getServerProject = async (id) => {
             }
         }`;
         const { data } = await axios.post(PRESENTATIONURL, { query });
-        return data["server"];
+        return data["data"]["server"];
     } catch (e) {
         console.log(e);
         return {};
