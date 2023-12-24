@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { isLoggedIn, logout } from '../services/api.service';
 import '../css/navbar.css';
 
 const Navbar = () => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const refresh = () => {
+    const res = isLoggedIn() == "true" ? true : false;
+    setLoggedIn(() => res);
+  }
+  useEffect(() => {
+    refresh();
+  });
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark"> {/* Use navbar-dark and bg-dark for black background */}
       <a className="navbar-brand" href="#">
@@ -43,10 +51,13 @@ const Navbar = () => {
           </li>
           <li className="nav-item">
             {
-              !isLoggedIn() ? (
-              <a className="nav-link" href="/login">
-                Login
-              </a>) : (<button onClick={() => logout()}>Logout</button>)
+              !loggedIn ? (
+                <a className="nav-link" href="/login">
+                  Login
+                </a>) : (<button onClick={() => {
+                  logout();
+                  refresh();
+                }}>Logout</button>)
             }
           </li>
         </ul>
